@@ -4,3 +4,7 @@ faster-whisper>=1.1.0
 # 公司網路以中間人 proxy 攔截 TLS 時，改用 Windows 憑證存放區，
 # 否則首次下載模型會失敗在 CERTIFICATE_VERIFY_FAILED。
 truststore>=0.9.0
+
+# 中文轉繁體（Whisper 的中文輸出幾乎都是簡體）。
+# 純 Python 實作，不需要編譯工具。
+opencc-python-reimplemented>=0.1.7

@@ -35,6 +35,7 @@ To avoid downloading on every machine, pre-fetch the model once and point
 - args: `["D:\\my_project\\whisper-mcp\\server.py"]`
 - optional env: `WHISPER_MODEL=small`, `WHISPER_DEVICE=auto`, `WHISPER_COMPUTE_TYPE=default`
 - optional env: `WHISPER_DOWNLOAD_ROOT=D:\models\whisper`
+- optional env: `WHISPER_ZH_CONVERT=s2twp` (Traditional Chinese output, see below)
 
 See `mcp.json.example` and `mcp_config.yaml.example`.
 
@@ -84,6 +85,28 @@ Transcription arguments:
 - `initial_prompt`: names and domain terminology
 - `output_format`: `json`, `text`, `srt`, `vtt`
 - `output_path`: save complete output to a local file
+- `zh_convert`: Chinese script conversion, see below
+
+## Traditional Chinese
+
+Whisper's Chinese training data is overwhelmingly Simplified, so raw output is
+Simplified regardless of the speaker. This server converts Chinese results to
+Traditional Chinese (Taiwan) with OpenCC before returning them.
+
+Conversion runs after recognition, so it never affects accuracy — and it only
+applies when the detected language is `zh` and the task is transcription.
+`whisper_translate_to_english` output is untouched.
+
+| Value | Result for `这个软件的默认设置` |
+|---|---|
+| `s2twp` (default) | 這個**軟體**的**預設****設定** — Taiwan vocabulary |
+| `s2tw` | 這個軟件的默認設置 — characters only |
+| `s2t` | 這個軟件的默認設置 — generic Traditional |
+| `off` | 这个软件的默认设置 — no conversion |
+
+Set the default with `WHISPER_ZH_CONVERT`, or override per call with the
+`zh_convert` argument. If `opencc` is missing or the config name is invalid,
+conversion is skipped silently and the raw output is returned.
 
 Example tool input:
 
