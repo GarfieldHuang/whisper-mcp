@@ -2,10 +2,26 @@
 from __future__ import annotations
 import json, os, threading
 from pathlib import Path
-from faster_whisper import WhisperModel
-from mcp.server.fastmcp import FastMCP
+# 公司網路常以中間人 proxy 攔截 TLS，其根憑證只裝在 Windows 憑證
+# 存放區，不在 certifi 內建的清單裡，於是首次下載模型會失敗在
+# CERTIFICATE_VERIFY_FAILED。truststore 讓 Python 改用作業系統的
+# 憑證存放區，HuggingFace 下載才過得去。裝不到就照原本的行為跑。
+try:
+    import truststore
+    truststore.inject_into_ssl()
+except Exception:
+    pass
 
-mcp = FastMCP("whisper")
+from faster_whisper import WhisperModel
+
+# mcp 2.0 把 FastMCP 改名為 MCPServer 並移到 mcp.server 底下。
+# 兩者的 .tool() 與 .run() 介面相同，這裡同時相容新舊版。
+try:
+    from mcp.server import MCPServer as _Server   # mcp >= 2.0
+except ImportError:
+    from mcp.server.fastmcp import FastMCP as _Server   # mcp 1.x
+
+mcp = _Server("whisper")
 DEFAULT_MODEL = os.getenv("WHISPER_MODEL", "small")
 DEFAULT_DEVICE = os.getenv("WHISPER_DEVICE", "auto")
 DEFAULT_COMPUTE_TYPE = os.getenv("WHISPER_COMPUTE_TYPE", "default")

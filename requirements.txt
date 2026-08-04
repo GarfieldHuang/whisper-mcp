@@ -1,2 +1,6 @@
 mcp>=1.3.0
 faster-whisper>=1.1.0
+
+# 公司網路以中間人 proxy 攔截 TLS 時，改用 Windows 憑證存放區，
+# 否則首次下載模型會失敗在 CERTIFICATE_VERIFY_FAILED。
+truststore>=0.9.0

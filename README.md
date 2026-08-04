@@ -14,20 +14,52 @@ pip install -r requirements.txt
 
 Recommended: 64-bit Python 3.10-3.12. The first call downloads the selected model.
 
+### Corporate networks
+
+The first call fetches the model from HuggingFace. Where a MITM proxy
+intercepts TLS, its root certificate lives only in the Windows certificate
+store, not in the bundle `certifi` ships, so the download fails with
+`CERTIFICATE_VERIFY_FAILED: self signed certificate in certificate chain`.
+
+`server.py` calls `truststore.inject_into_ssl()` at startup, which switches
+Python over to the OS certificate store and makes the download work. Keep
+`truststore` in `requirements.txt`.
+
+To avoid downloading on every machine, pre-fetch the model once and point
+`WHISPER_DOWNLOAD_ROOT` at a shared folder.
+
 ## MCP import parameters
 
 - transport: `stdio`
-- command: `D:\my_project\my-agent\whisper-mcp\.venv\Scripts\python.exe`
-- args: `["D:\\my_project\\my-agent\\whisper-mcp\\server.py"]`
+- command: `D:\my_project\whisper-mcp\.venv\Scripts\python.exe`
+- args: `["D:\\my_project\\whisper-mcp\\server.py"]`
 - optional env: `WHISPER_MODEL=small`, `WHISPER_DEVICE=auto`, `WHISPER_COMPUTE_TYPE=default`
 - optional env: `WHISPER_DOWNLOAD_ROOT=D:\models\whisper`
 
 See `mcp.json.example` and `mcp_config.yaml.example`.
 
+### my-agent GUI (新增 MCP Server dialog)
+
+| Field | Value |
+|---|---|
+| 名稱 | `whisper` |
+| 傳輸方式 | `stdio` |
+| 指令 | `D:\my_project\whisper-mcp\.venv\Scripts\python.exe` |
+| 參數 | `D:\my_project\whisper-mcp\server.py` |
+| SSE URL | leave empty (stdio only) |
+| inject | leave empty |
+
+`inject` is for credentials the model should never see — this server needs none.
+
+The dialog has no `env` field, so `WHISPER_MODEL` and friends cannot be set
+there. The defaults (`small` / `auto` / `default`) apply. To change them, edit
+`~/.my-agent/mcp_config.yaml` directly and add an `env:` block as shown in
+`mcp_config.yaml.example`.
+
 Claude Code command:
 
 ```bat
-claude mcp add whisper -- "D:\my_project\my-agent\whisper-mcp\.venv\Scripts\python.exe" "D:\my_project\my-agent\whisper-mcp\server.py"
+claude mcp add whisper -- "D:\my_project\whisper-mcp\.venv\Scripts\python.exe" "D:\my_project\whisper-mcp\server.py"
 claude mcp list
 ```
 
@@ -71,5 +103,5 @@ CPU recommendation: `small`, `cpu`, `int8`. NVIDIA GPU: `large-v3` or `turbo`, `
 Test with MCP Inspector:
 
 ```bat
-npx @modelcontextprotocol/inspector "D:\my_project\my-agent\whisper-mcp\.venv\Scripts\python.exe" "D:\my_project\my-agent\whisper-mcp\server.py"
+npx @modelcontextprotocol/inspector "D:\my_project\whisper-mcp\.venv\Scripts\python.exe" "D:\my_project\whisper-mcp\server.py"
 ```
