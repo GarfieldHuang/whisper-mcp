@@ -1,0 +1,10 @@
+servers:
+  whisper:
+    transport: stdio
+    command: D:\my_project\my-agent\whisper-mcp\.venv\Scripts\python.exe
+    args:
+      - D:\my_project\my-agent\whisper-mcp\server.py
+    env:
+      WHISPER_MODEL: small
+      WHISPER_DEVICE: auto
+      WHISPER_COMPUTE_TYPE: default
