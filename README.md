@@ -4,7 +4,13 @@ Local speech transcription MCP server using faster-whisper. Supports transcripti
 
 ## Install
 
-Run `setup.bat`, or:
+Double-click **`setup.bat`**. Nothing else is needed — if the machine has no
+Python 3.10+, it downloads the official python.org installer and installs it
+for the current user only, so no administrator rights are involved.
+
+It prints the two paths you need for the MCP configuration when it finishes.
+
+If you already have Python and prefer doing it by hand:
 
 ```bat
 py -3 -m venv .venv
