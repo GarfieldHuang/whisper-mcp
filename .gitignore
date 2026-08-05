@@ -9,3 +9,6 @@ __pycache__/
 .vscode/
 .DS_Store
 Thumbs.db
+
+# 一次性的呼叫腳本（含個人路徑）
+call_mcp.py
