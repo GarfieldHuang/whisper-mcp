@@ -106,9 +106,9 @@ applies when the detected language is `zh` and the task is transcription.
 | Value | Result for `这个软件的默认设置` |
 |---|---|
 | `s2twp` (default) | 這個**軟體**的**預設****設定** — Taiwan vocabulary |
-| `s2tw` | 這個軟件的默認設置 — characters only |
-| `s2t` | 這個軟件的默認設置 — generic Traditional |
-| `off` | 这个软件的默认设置 — no conversion |
+| `s2tw` | characters only |
+| `s2t` | generic Traditional |
+| `off` | no conversion |
 
 Set the default with `WHISPER_ZH_CONVERT`, or override per call with the
 `zh_convert` argument. If `opencc` is missing or the config name is invalid,
