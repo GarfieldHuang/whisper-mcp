@@ -103,7 +103,7 @@ Conversion runs after recognition, so it never affects accuracy — and it only
 applies when the detected language is `zh` and the task is transcription.
 `whisper_translate_to_english` output is untouched.
 
-| Value | Result for `这个软件的默认设置` |
+| Value | Result |
 |---|---|
 | `s2twp` (default) | 這個**軟體**的**預設****設定** — Taiwan vocabulary |
 | `s2tw` | characters only |
